@@ -108,6 +108,8 @@ contract Raffle is VRFConsumerBaseV2 {
      * 3. The contract has ETH (players)
      * 4. (Implicit) The subscription is funded with LINK
      */
+
+    // CheckUpKeep tells chainlink nodes when its time to call the perform upkeep
     function checkUpkeep(
         bytes memory /* checkData */
     ) public view returns (bool upkeepNeeded, bytes memory /* performData */) {
@@ -119,6 +121,7 @@ contract Raffle is VRFConsumerBaseV2 {
         return (upkeepNeeded, "0x0");
     }
 
+    // performUpKeep kicks off the chainlink vrf call
     function performUpkeep(bytes calldata /* performData */) external {
         (bool upkeepNeeded, ) = checkUpkeep("");
         if (!upkeepNeeded) {
