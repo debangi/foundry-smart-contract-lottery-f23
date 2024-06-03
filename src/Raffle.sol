@@ -80,7 +80,7 @@ contract Raffle is VRFConsumerBaseV2 {
     ) VRFConsumerBaseV2(vrfCoordinator) {
         i_entranceFee = entranceFee;
         i_interval = interval;
-        i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinator);
+        i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinator); // vrfcoordinator address is different chain to chain
         i_subscriptionId = subscriptionId;
         i_gasLane = gasLane;
         i_callbackGasLimit = callbackGasLimit;
@@ -144,17 +144,20 @@ contract Raffle is VRFConsumerBaseV2 {
         uint256 /*requestId*/,
         uint256[] memory randomWords
     ) internal override {
+        // Checks
+        // Effects (our own contract)
         uint256 indexofWinner = randomWords[0] % s_players.length;
         address payable winner = s_players[indexofWinner];
         s_recentWinner = winner;
         s_raffleState = RaffleState.OPEN;
         s_players = new address payable[](0);
         s_lastTimeStamp = block.timestamp;
+        emit PickedWinner(winner);
+        // Interactions (Other contracts))
         (bool success, ) = winner.call{value: address(this).balance}("");
         if (!success) {
             revert Raffle__TransferFailed();
         }
-        emit PickedWinner(winner);
     }
 
     /** Getter Function */

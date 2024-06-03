@@ -88,3 +88,10 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+- Revert with custom error is more gas efficient than require
+- Whenever we make a storage update, we should emit an event
+
+```shell
+   forge install smartcontractkit/chainlink-brownie-contracts@0.6.1 --no-commit
+```
